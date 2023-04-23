@@ -67,7 +67,7 @@ class Agent:
         command_name = None
         arguments = None
         user_input = ""
-
+        
         while True:
             # Discontinue if continuous limit is reached
             loop_count += 1
@@ -91,7 +91,6 @@ class Agent:
                     self.memory,
                     cfg.fast_token_limit,
                 )  # TODO: This hardcodes the model to use GPT3.5. Make this an argument
-
             assistant_reply_json = fix_json_using_multiple_techniques(assistant_reply)
             for plugin in cfg.plugins:
                 if not plugin.can_handle_post_planning():

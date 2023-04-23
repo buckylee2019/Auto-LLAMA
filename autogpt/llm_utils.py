@@ -10,7 +10,7 @@ from openai.error import APIError, RateLimitError
 from autogpt.config import Config
 from autogpt.logs import logger
 from autogpt.types.openai import Message
-
+from autogpt.bam import bam_chat_message
 CFG = Config()
 
 openai.api_key = CFG.openai_api_key
@@ -77,6 +77,7 @@ def create_chat_completion(
             f"{Fore.GREEN}Creating chat completion with model {model}, temperature {temperature}, max_tokens {max_tokens}{Fore.RESET}"
         )
     for plugin in CFG.plugins:
+        print('check here \n')
         if plugin.can_handle_chat_completion(
             messages=messages,
             model=model,
@@ -91,7 +92,9 @@ def create_chat_completion(
             )
             if message is not None:
                 return message
+    
     response = None
+    print( CFG.use_bam)
     for attempt in range(num_retries):
         backoff = 2 ** (attempt + 2)
         try:
@@ -103,7 +106,17 @@ def create_chat_completion(
                     temperature=temperature,
                     max_tokens=max_tokens,
                 )
+
+            elif CFG.use_bam:
+                response = bam_chat_message(
+                    model=model,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
+                )
+
             else:
+                
                 response = openai.ChatCompletion.create(
                     model=model,
                     messages=messages,
@@ -133,6 +146,8 @@ def create_chat_completion(
                 f"API Bad gateway. Waiting {backoff} seconds...{Fore.RESET}",
             )
         time.sleep(backoff)
+    
+    
     if response is None:
         logger.typewriter_log(
             "FAILED TO GET RESPONSE FROM OPENAI",
@@ -145,7 +160,10 @@ def create_chat_completion(
             raise RuntimeError(f"Failed to get response after {num_retries} retries")
         else:
             quit(1)
-    resp = response.choices[0].message["content"]
+    if CFG.use_bam:
+        resp = response
+    else:
+        resp = response.choices[0].message.content
     for plugin in CFG.plugins:
         if not plugin.can_handle_on_response():
             continue
