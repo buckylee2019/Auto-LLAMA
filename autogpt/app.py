@@ -10,6 +10,7 @@ from autogpt.memory import get_memory
 from autogpt.processing.text import summarize_text
 from autogpt.prompts.generator import PromptGenerator
 from autogpt.speech import say_text
+from autogpt.commands import google_search
 
 CFG = Config()
 AGENT_MANAGER = AgentManager()
@@ -54,6 +55,7 @@ def get_command(response_json: Dict):
 
         command = response_json["command"]
         if not isinstance(command, dict):
+            
             return "Error:", "'command' object is not a dictionary"
 
         if "name" not in command:
@@ -103,7 +105,7 @@ def execute_command(
     """
     try:
         cmd = command_registry.commands.get(command_name)
-
+        
         # If the command is found, call it with the provided arguments
         if cmd:
             return cmd(**arguments)
@@ -121,9 +123,13 @@ def execute_command(
             return "No action performed."
         elif command_name == "task_complete":
             shutdown()
+        elif command_name == "google_official_search":
+            return google_search(*arguments.values())
         else:
             for command in prompt.commands:
+                
                 if command_name == command["label"] or command_name == command["name"]:
+
                     return command["function"](*arguments.values())
             return (
                 f"Unknown command '{command_name}'. Please refer to the 'COMMANDS'"

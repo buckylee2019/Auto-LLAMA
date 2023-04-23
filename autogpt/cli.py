@@ -162,8 +162,10 @@ def main(
         )
         logger.typewriter_log("Using Browser:", Fore.GREEN, cfg.selenium_web_browser)
         system_prompt = ai_config.construct_full_prompt()
+        
         if cfg.debug_mode:
             logger.typewriter_log("Prompt:", Fore.GREEN, system_prompt)
+        
         agent = Agent(
             ai_name=ai_name,
             memory=memory,
@@ -174,6 +176,7 @@ def main(
             system_prompt=system_prompt,
             triggering_prompt=triggering_prompt,
         )
+        
         agent.start_interaction_loop()
 
 

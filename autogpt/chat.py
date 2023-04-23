@@ -76,7 +76,7 @@ def chat_with_ai(
             """
             model = cfg.fast_llm_model  # TODO: Change model from hardcode to argument
             # Reserve 1000 tokens for the response
-
+            
             logger.debug(f"Token limit: {token_limit}")
             send_token_limit = token_limit - 1000
 
@@ -94,7 +94,7 @@ def chat_with_ai(
                 insertion_index,
                 current_context,
             ) = generate_context(prompt, relevant_memory, full_message_history, model)
-
+            
             while current_tokens_used > 2500:
                 # remove memories until we are under 2500 tokens
                 relevant_memory = relevant_memory[:-1]
@@ -110,7 +110,7 @@ def chat_with_ai(
             current_tokens_used += token_counter.count_message_tokens(
                 [create_chat_message("user", user_input)], model
             )  # Account for user input (appended later)
-
+            
             while next_message_to_add_index >= 0:
                 # print (f"CURRENT TOKENS USED: {current_tokens_used}")
                 message_to_add = full_message_history[next_message_to_add_index]
@@ -135,7 +135,7 @@ def chat_with_ai(
 
             # Append user input, the length of this is accounted for above
             current_context.extend([create_chat_message("user", user_input)])
-
+            
             plugin_count = len(cfg.plugins)
             for i, plugin in enumerate(cfg.plugins):
                 if not plugin.can_handle_on_planning():
@@ -154,7 +154,7 @@ def chat_with_ai(
                         print("Plugins remaining at stop:", plugin_count - i)
                     break
                 current_context.append(create_chat_message("system", plugin_response))
-
+            
             # Calculate remaining tokens
             tokens_remaining = token_limit - current_tokens_used
             # assert tokens_remaining >= 0, "Tokens remaining is negative.
@@ -181,13 +181,13 @@ def chat_with_ai(
                 messages=current_context,
                 max_tokens=tokens_remaining,
             )
-
+            
             # Update full message history
             full_message_history.append(create_chat_message("user", user_input))
             full_message_history.append(
                 create_chat_message("assistant", assistant_reply)
             )
-
+            
             return assistant_reply
         except RateLimitError:
             # TODO: When we switch to langchain, this is built in

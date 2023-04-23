@@ -39,6 +39,7 @@ class Config(metaclass=Singleton):
         )
         self.embed_dim = int(os.getenv("EMBED_DIM", 1536))
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
+        self.bam_api_key = os.getenv("BAM_API_KEY")
         self.temperature = float(os.getenv("TEMPERATURE", "0"))
         self.use_azure = os.getenv("USE_AZURE") == "True"
         self.use_bam = os.getenv("USE_BAM") == "True"
