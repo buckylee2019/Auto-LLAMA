@@ -123,6 +123,7 @@ class LocalCache(MemoryProviderSingleton):
 
         Returns: List[str]
         """
+        print('text here: ')
         print(text)
         embedding = create_embedding_with_ada(text)
         print(len(embedding))

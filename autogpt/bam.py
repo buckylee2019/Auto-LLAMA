@@ -38,17 +38,9 @@ def bam_chat_message(model, messages, temperature, max_tokens):
     response = requests.request("POST", url, headers=headers, data=payload)
     
     bam_response_data = response.json()
-<<<<<<< HEAD
     
     # Process and return the response
     print(bam_response_data)
     answer = bam_response_data["results"][0]["generated_text"].strip()
     print(answer)
-=======
-
-    # Process and return the response
-    print(bam_response_data)
-    answer = bam_response_data["results"][0]["generated_text"].strip()
-
->>>>>>> 3c9c9c9 (add IBM bam(tested) and alpaca (not test))
     return answer
