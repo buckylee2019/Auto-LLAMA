@@ -96,7 +96,6 @@ def create_chat_completion(
                 return message
     
     response = None
-    print( CFG.use_bam)
     for attempt in range(num_retries):
         backoff = 2 ** (attempt + 2)
         try:

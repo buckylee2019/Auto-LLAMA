@@ -21,6 +21,7 @@ class Dalai:
         self.DONE = False
         self.RESULT = None
         self.setup()
+
     def setup(self):
         # try to connect
         try:
@@ -101,6 +102,7 @@ class Dalai:
             response = response.replace("\n", "")
             response = response.replace("\r", "")
             response = response.replace("<end>", "")
+            response = response.replace(prompt['prompt'], "")
             if not response.endswith(".") :
                 response += "."
             return response

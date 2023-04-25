@@ -123,10 +123,9 @@ class LocalCache(MemoryProviderSingleton):
 
         Returns: List[str]
         """
-        print('text here: ')
-        print(text)
+
         embedding = create_embedding_with_ada(text)
-        print(len(embedding))
+
         scores = np.dot(self.data.embeddings, embedding)
 
         top_k_indices = np.argsort(scores)[-k:][::-1]
