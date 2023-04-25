@@ -2,6 +2,9 @@ import sys
 import os
 import socketio
 import time as time
+from autogpt.config import Config
+
+CFG = Config()
 
 class NoServerException(Exception):
     pass
@@ -18,7 +21,7 @@ class Dalai:
         self.DONE = False
         self.RESULT = None
         self.setup()
-    
+
     def setup(self):
         # try to connect
         try:
@@ -72,8 +75,22 @@ class Dalai:
 
         return self.RESULT
 
-    def generate_request(self, prompt, model, id='0', n_predict=128, repeat_last_n=64, repeat_penalty=1.3, seed=-1, temp=0.5, threads=4, top_k=40, top_p=0.9):
-        request = {'debug': False, 'id':id, 'model':model, 'models':[model], 'n_predict':n_predict, 'prompt':prompt, 'repeat_last_n':repeat_last_n, 'repeat_penalty':repeat_penalty, 'seed':seed, 'temp':temp, 'threads':threads, 'top_k':top_k, 'top_p':top_p}
+    def generate_request(self, prompt, model, id='0', n_predict=1024, repeat_last_n=64, repeat_penalty=1.3, seed=-1, temp = CFG.temperature, threads=8, top_k=40, top_p=0.9):
+        request = {
+            'debug': False, 
+            'id':id, 
+            'model':model, 
+            'models':[model], 
+            'n_predict':n_predict, 
+            'prompt':prompt, 
+            'repeat_last_n':repeat_last_n, 
+            'repeat_penalty':repeat_penalty, 
+            'seed':seed, 
+            'temp':temp, 
+            'threads':threads, 
+            'top_k':top_k, 
+            'top_p':top_p
+            }
         return request
     
     def request(self, prompt, prettify=True):
@@ -85,6 +102,7 @@ class Dalai:
             response = response.replace("\n", "")
             response = response.replace("\r", "")
             response = response.replace("<end>", "")
+            response = response.replace(prompt['prompt'], "")
             if not response.endswith(".") :
                 response += "."
             return response
@@ -93,19 +111,12 @@ class Dalai:
 
 model = Dalai()
 
-def repl() -> None:
-    try:
-        while True:
-            _in = input(">> ")
-            request = model.generate_request(_in, 'alpaca.7B')
-            print(model.request(request))
+def llama_reply(messages):
+   
+    inputs = "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request. \n\n \
+        ### Instruction: \n" + "\n".join([m['content'] for m in messages]) + "### Response: \n"
+    request = model.generate_request(inputs , 'alpaca.7B')
+    response = model.request(request)
+    
+    return (response)
 
-    except KeyboardInterrupt as e:
-        print("\nExiting...")
-
-if __name__ == "__main__":
-    print()
-    print("Welcome to LLaMa Chat Interface!")
-    print("crtl-c to quit")
-    print()
-    repl()

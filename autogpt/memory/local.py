@@ -7,10 +7,12 @@ from typing import Any, List
 import numpy as np
 import orjson
 
+from autogpt.config import Config
 from autogpt.llm_utils import create_embedding_with_ada
 from autogpt.memory.base import MemoryProviderSingleton
 
-EMBED_DIM = 1536
+CFG = Config()
+EMBED_DIM = CFG.embed_dim
 SAVE_OPTIONS = orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SERIALIZE_DATACLASS
 
 
@@ -121,8 +123,9 @@ class LocalCache(MemoryProviderSingleton):
 
         Returns: List[str]
         """
+        print(text)
         embedding = create_embedding_with_ada(text)
-
+        print(len(embedding))
         scores = np.dot(self.data.embeddings, embedding)
 
         top_k_indices = np.argsort(scores)[-k:][::-1]

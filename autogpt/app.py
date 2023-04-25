@@ -81,7 +81,6 @@ def map_command_synonyms(command_name: str):
     synonyms = [
         ("write_file", "write_to_file"),
         ("create_file", "write_to_file"),
-        ("search", "google"),
     ]
     for seen_command, actual_command_name in synonyms:
         if command_name == seen_command:

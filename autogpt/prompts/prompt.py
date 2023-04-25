@@ -40,7 +40,6 @@ def build_default_prompt_generator() -> PromptGenerator:
     commands = [
         ("Do Nothing", "do_nothing", {}),
         ("Task Complete (Shutdown)", "task_complete", {"reason": "<reason>"},),
-        ("google", "google", {"query": "<query>"}, ),
     ]
     # Add commands to the PromptGenerator object
     for command_label, command_name, args in commands:

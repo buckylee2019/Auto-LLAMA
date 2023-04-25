@@ -11,6 +11,7 @@ from autogpt.config import Config
 from autogpt.logs import logger
 from autogpt.types.openai import Message
 from autogpt.bam import bam_chat_message
+# from autogpt.alpaca import llama_reply
 CFG = Config()
 
 openai.api_key = CFG.openai_api_key
@@ -72,12 +73,13 @@ def create_chat_completion(
     """
     num_retries = 10
     warned_user = False
+    use_openai = False
     if CFG.debug_mode:
         print(
             f"{Fore.GREEN}Creating chat completion with model {model}, temperature {temperature}, max_tokens {max_tokens}{Fore.RESET}"
         )
     for plugin in CFG.plugins:
-        print('check here \n')
+        
         if plugin.can_handle_chat_completion(
             messages=messages,
             model=model,
@@ -115,8 +117,12 @@ def create_chat_completion(
                     max_tokens=max_tokens,
                 )
 
+            # elif CFG.use_llama:
+            #     response = llama_reply(
+            #         messages=messages
+            #     )
             else:
-                
+                use_openai = True
                 response = openai.ChatCompletion.create(
                     model=model,
                     messages=messages,
@@ -160,10 +166,10 @@ def create_chat_completion(
             raise RuntimeError(f"Failed to get response after {num_retries} retries")
         else:
             quit(1)
-    if CFG.use_bam:
-        resp = response
-    else:
+    if use_openai:
         resp = response.choices[0].message.content
+    else:
+        resp = response
     for plugin in CFG.plugins:
         if not plugin.can_handle_on_response():
             continue
