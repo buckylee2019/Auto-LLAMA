@@ -44,9 +44,6 @@ def count_message_tokens(
     elif model == "gpt-4-0314":
         tokens_per_message = 3
         tokens_per_name = 1
-    elif "/" in model:
-        tokens_per_message = 3
-        tokens_per_name = 1
     else:
         raise NotImplementedError(
             f"num_tokens_from_messages() is not implemented for model {model}.\n"

@@ -15,10 +15,6 @@ def get_ada_embedding(text):
             input=[text],
             engine=cfg.get_azure_deployment_id_for_model("text-embedding-ada-002"),
         )["data"][0]["embedding"]
-    elif cfg.use_bam:
-        return openai.Embedding.create(input=[text], model="text-embedding-ada-002")[
-            "data"
-        ][0]["embedding"]
     else:
         return openai.Embedding.create(input=[text], model="text-embedding-ada-002")[
             "data"

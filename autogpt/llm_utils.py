@@ -94,9 +94,7 @@ def create_chat_completion(
             )
             if message is not None:
                 return message
-    
     response = None
-    print( CFG.use_bam)
     for attempt in range(num_retries):
         backoff = 2 ** (attempt + 2)
         try:
@@ -152,8 +150,6 @@ def create_chat_completion(
                 f"API Bad gateway. Waiting {backoff} seconds...{Fore.RESET}",
             )
         time.sleep(backoff)
-    
-    
     if response is None:
         logger.typewriter_log(
             "FAILED TO GET RESPONSE FROM OPENAI",
