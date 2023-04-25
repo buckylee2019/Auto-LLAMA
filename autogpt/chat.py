@@ -79,8 +79,7 @@ def chat_with_ai(
             
             logger.debug(f"Token limit: {token_limit}")
             send_token_limit = token_limit - 1000
-            print('full message:')
-            print(full_message_history)
+
             relevant_memory = (
                 ""
                 if len(full_message_history) == 0
