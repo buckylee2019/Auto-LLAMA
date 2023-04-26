@@ -29,3 +29,8 @@ docker run -it -d -v <your models directory>:/llama.cpp/models -p 8000:8000 buck
 ```
 
 4. Run Auto-gpt
+For Linux:
+
+```bash
+./run.sh
+```
