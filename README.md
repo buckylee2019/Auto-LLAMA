@@ -2,7 +2,7 @@
 
  
 
-This project uses [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to experiment to posibility of using local LLM. 
+This project uses [Auto-GPT](https://github.com/Significant-Gravitas/Auto-GPT) to experiment the posibility of using local LLM. 
 Reference [gpt-llmam.cpp](https://github.com/keldenl/gpt-llama.cpp) to build custom API. 
 
 ## Run
